@@ -1,26 +1,39 @@
 var http = require('http');
-var FormData = require('form-data');
-var util = require('util');
 
-var options = {
-  hostname: 'localhost',
-  port: 3000,
-  path: '/',
-  method: 'POST'
-};
-
-var req = http.request(options, function(res){
-  res.on('data', function(chunk){
-    console.log(chunk);
+function makeRequest(host, port, path, body, responseCallback){
+  var reqbody = JSON.stringify(body);
+  var options = {
+    hostname: host,
+    port: port,
+    path: path,
+    method: 'POST',
+    headers: {
+      'Content-Type' : 'application/json',
+      'Content-Length' : Buffer.byteLength(reqbody, 'utf8')
+    }
+  };
+  
+  var req = http.request(options, function(res){
+    res.setEncoding('utf8');
+    var data = "";
+    res.on('data', function(chunk){
+      data += chunk;
+    });
+    res.on('end', function(){
+      responseCallback(JSON.parse(data));
+    });
   });
+  req.end(reqbody);
+  
+  req.on('error', function(e){
+    console.log(e);
+  });
+}
+
+var reqJson = {hello:1234, world:9876};
+makeRequest('localhost', 3000, '/', reqJson, function(resJson){
+  console.log(resJson);
 });
-
-
-var form = new FormData();
-form.append('hello', 'ÄãºÃÂð£¿');
-
-form.pipe(req);
-
-req.on('error', function(e){
-  //console.log(e);
+makeRequest('localhost', 3000, '/user', reqJson, function(resJson){
+  console.log(resJson);
 });
