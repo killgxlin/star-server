@@ -4,11 +4,6 @@ var app = express();
 var doc = '<form action="/" method="post" ><input type="text" name="hello" /><input type="submit" /></form>';
 
 app.use(express.bodyParser());
-app.use(express.session());
-
-app.get('/', function(req, res){
-  res.send(doc);
-});
 
 function makeRequestHandle(path, requestCallback){
   app.post(path, function(req, res){
@@ -18,6 +13,7 @@ function makeRequestHandle(path, requestCallback){
   });
 }
 
+app.listen(3000);
 makeRequestHandle('/', function(reqJson, responseCallback){
   require('timers').setTimeout(function(){
     responseCallback({path:'/', req:reqJson});
@@ -27,6 +23,5 @@ makeRequestHandle('/', function(reqJson, responseCallback){
 makeRequestHandle('/user', function(reqJson, responseCallback){
   responseCallback({path:'/user', req:reqJson});
 });
-app.listen(3000);
   
 
