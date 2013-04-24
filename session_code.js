@@ -5,9 +5,9 @@ var MongoStore = require('connect-mongo')(express);
 app.use(express.cookieParser());
 app.use(express.session({
   secret: 'keyboard cat'
-  ,store: new MongoStore({
-    db: 'session'
-  })
+//  ,store: new MongoStore({
+//    db: 'session'
+//  })
 }));
 
 app.use(function(req, res, next){
@@ -18,7 +18,9 @@ app.use(function(req, res, next){
     res.write('<p>expires in: ' + (sess.cookie.maxAge / 1000) + 's</p>');
     res.end();
     sess.views++;
-    console.log(sess.views);
+    sess.reload(function(err){
+      console.log(sess.views);
+    });
   } else {
     sess.views = 1;
     res.end('welcome to the session demo. refresh!');
