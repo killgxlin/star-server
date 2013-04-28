@@ -1,8 +1,6 @@
 var express = require('express');
 var app = express();
 
-var doc = '<form action="/" method="post" ><input type="text" name="hello" /><input type="submit" /></form>';
-
 app.use(express.bodyParser());
 
 function makeRequestHandle(path, requestCallback){
