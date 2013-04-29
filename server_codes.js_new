@@ -1,0 +1,48 @@
+var express = require('express');
+var app = express();
+
+app.use(express.bodyParser());
+
+function makeRequestHandle(path, requestCallback){
+  app.post(path, function(req, res){
+    requestCallback(req.body, function(resJson, sessionData = null){
+      if(session != null) {
+        req.session.data = sessionData;
+	req.session.save(function(err){
+          res.json(resJson);
+	});
+      }
+    });
+  });
+}
+
+app.listen(3000);
+makeRequestHandle('/register', function(req, responseCallback){
+  db.queryAccount(reqJson.name, function(account){
+    if(account != {}){
+      responseCallback({err:'already exist'});
+    }else{
+      db.insertAccount(reqJson, function(err){
+        if(err!=null){
+	  responseCallback({err:'insert err'});
+	}else{
+	  responseCallback({err:''});
+	}
+      });
+    }
+  });
+});
+
+makeRequestHandle('/login', function(reqJson, responseCallback){
+  db.queryAccount(reqJson.name, function(account){
+    if(account.passwd == reqJson.passwd){
+      responseCallback({err:''}, {account:reqJson.name});
+    }else{
+      responseCallback({err:'passwd err'});
+    }
+  });
+});
+  
+makeRequestHandle('/loadplayer', function(reqJson, responseCallback){
+  
+});

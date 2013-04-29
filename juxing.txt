@@ -81,3 +81,19 @@ response msg
     remove item
     money change
     result
+
+v2------------------------------------------------------
+register
+    req user passwd
+    res err
+
+login
+    req user passwd
+    res err
+
+loadPlayer
+    req
+    res {err:'', data:playerData}
+
+createPlayer
+selectCard
